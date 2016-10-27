@@ -12,7 +12,6 @@ Telemetry.init(function() {
       });
     }
     results.sort((a,b) => a.sum < b.sum);
-    console.log("DEVTOOLS_JAVASCRIPT_ERROR_DISPLAYED:\n" + results.map((x) => x.key + " " + x.sum).join("\n"));
     var errorList = document.getElementById("error-list");
     for (var entry of results) {
       var li = document.createElement("li");

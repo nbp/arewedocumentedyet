@@ -12,7 +12,7 @@ function displayResults(errors) {
       key: key || "Unknown Error Key",
       err: errors[key],
       sum: errors[key].data.map((x) => x.sum).reduce((a,b) => a + b, 0),
-      mdn: key in ErrorDocs ? baseURL + ErrorDocs[key] + params : ""
+      mdn: key in ErrorDocs ? baseURL + ErrorDocs[key] : ""
     });
   }
   results.sort((a,b) => a.sum < b.sum);
@@ -20,7 +20,6 @@ function displayResults(errors) {
   for (var entry of results) {
     var li = document.createElement("li");
     var pName = document.createElement("span");
-    var aMdn = document.createElement("a");
     var textName = document.createTextNode(entry.key);
     var pSum = document.createElement("span");
     var textSum = document.createTextNode("" + entry.sum);
@@ -31,9 +30,10 @@ function displayResults(errors) {
     li.appendChild(pName);
     pName.classList.add("name");
     if (entry.mdn) {
-      pName.appendChild(aMdn);
+      var aMdn = document.createElement("a");
       aMdn.appendChild(textName);
       aMdn.setAttribute("href", entry.mdn)
+      pName.appendChild(aMdn);
     } else {
       pName.appendChild(textName);
     }

@@ -12,7 +12,7 @@ function displayResults(errors) {
       key: key || "Unknown Error Key",
       err: errors[key],
       sum: errors[key].data.map((x) => x.sum).reduce((a,b) => a + b, 0),
-      mdn: key in ErrorDocs ? baseURL + ErrorDocs[key] : ""
+      mdn: key in ErrorDocs ? baseErrorURL + ErrorDocs[key] : ""
     });
   }
   results.sort((a,b) => a.sum < b.sum);

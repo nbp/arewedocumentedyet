@@ -87,30 +87,28 @@ async function fillPageContent() {
   await (new Promise( (resolve, reject) => Telemetry.init(resolve) ));
 
   log("Request telemetry data.");
-  var berr_n0 = (new Promise(function (resolve, reject) {
-    Telemetry.getEvolution(betaChannel.name, "" + bnum, metric, {}, true, resolve)
-  }));
-  var berr_n1 = (new Promise(function (resolve, reject) {
-    Telemetry.getEvolution(betaChannel.name, "" + (bnum - 1), metric, {}, true, resolve)
-  }));
-  var berr_n2 = (new Promise(function (resolve, reject) {
-    Telemetry.getEvolution(betaChannel.name, "" + (bnum - 2), metric, {}, true, resolve)
-  }));
+  // Telemetry collection got removed in Bug 1381834, and pending to be added
+  // back in Bug 1525682.
+  var errs = [];
+  for (let bn = 50; bn < bnum; bn++) {
+    errs.push(new Promise(function (resolve, reject) {
+        Telemetry.getEvolution(betaChannel.name, "" + bn, metric, {}, true, resolve);
+    }));
+  }
+  for (let nn = 50; nn < nnum; nn++) {
+    errs.push(new Promise(function (resolve, reject) {
+        Telemetry.getEvolution(betaChannel.name, "" + nn, metric, {}, true, resolve);
+    }));
+  }
 
-  var nerr_n0 = (new Promise(function (resolve, reject) {
-    Telemetry.getEvolution(nightlyChannel.name, "" + nnum, metric, {}, true, resolve)
-  }));
-  var nerr_n1 = (new Promise(function (resolve, reject) {
-    Telemetry.getEvolution(nightlyChannel.name, "" + (nnum - 1), metric, {}, true, resolve)
-  }));
-  var nerr_n2 = (new Promise(function (resolve, reject) {
-    Telemetry.getEvolution(nightlyChannel.name, "" + (nnum - 2), metric, {}, true, resolve)
-  }));
-
-  var errors = aggregateErrors(
-    await berr_n0, await berr_n1, await berr_n2,
-    await nerr_n0, await nerr_n1, await nerr_n2
-  );
+  for (var i = 0; i < errs.length; i++) {
+    try {
+      errs[i] = await errs[i];
+    } catch {
+      errs[i] = {};
+    }
+  }
+  var errors = aggregateErrors(...errs);
 
   log("Aggregate results.");
   displayResults(errors);

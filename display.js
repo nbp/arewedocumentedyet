@@ -16,7 +16,7 @@ function displayResults(errors) {
       key: key || "Unknown Error Key",
       err: errors[key],
       sum: errors[key].data.map((x) => x.sum).reduce((a,b) => a + b, 0),
-      mdn: exports.getURL(err)
+      mdn: exports.GetURL(err)
     });
   }
   results.sort((a,b) => a.sum < b.sum);

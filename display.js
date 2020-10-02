@@ -8,11 +8,15 @@ function log(msg) {
 function displayResults(errors) {
   var results = [];
   for (var key of Object.keys(errors)) {
+    let err = {
+      errorMessageName: key,
+      category: ""
+    };
     results.push({
       key: key || "Unknown Error Key",
       err: errors[key],
       sum: errors[key].data.map((x) => x.sum).reduce((a,b) => a + b, 0),
-      mdn: key in ErrorDocs ? baseErrorURL + ErrorDocs[key] : ""
+      mdn: exports.getURL(err)
     });
   }
   results.sort((a,b) => a.sum < b.sum);

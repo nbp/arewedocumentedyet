@@ -13,7 +13,22 @@ https://aggregates.telemetry.mozilla.org/aggregates_by/submission_date/channels/
     <ul id="error-list">
     </ul>
     <script src="https://telemetry.mozilla.org/v2/telemetry.js"></script>
-    <script>var exports = {}</script>
+    <script>
+     // Polyfill before loading errordocs.js from the Firefox sources.
+     function require(name) {
+         switch (name) {
+             case "Services":
+                 return {
+                     'urlFormatter': {
+                         'formatURLPref': function () {
+                             return "https://support.mozilla.org/kb/";
+                         }
+                     }
+                 };
+         }
+     }
+     var exports = {};
+    </script>
     <script src="https://hg.mozilla.org/mozilla-central/raw-file/tip/devtools/server/actors/errordocs.js"></script>
     <script src="display.js"></script>
   </body>

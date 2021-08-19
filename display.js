@@ -86,6 +86,8 @@ async function fillPageContent() {
   var versions = await response.json();
   var bnum = parseInt(versions[betaChannel.key]);
   var nnum = parseInt(versions[nightlyChannel.key]);
+  var bmin = bnum - 5;
+  var nmin = nnum - 5;
 
   log("Initialize telemetry.");
   await (new Promise( (resolve, reject) => Telemetry.init(resolve) ));
@@ -94,12 +96,12 @@ async function fillPageContent() {
   // Telemetry collection got removed in Bug 1381834, and pending to be added
   // back in Bug 1525682.
   var errs = [];
-  for (let bn = 50; bn < bnum; bn++) {
+  for (let bn = bmin; bn < bnum; bn++) {
     errs.push(new Promise(function (resolve, reject) {
         Telemetry.getEvolution(betaChannel.name, "" + bn, metric, {}, true, resolve);
     }));
   }
-  for (let nn = 50; nn < nnum; nn++) {
+  for (let nn = nmin; nn < nnum; nn++) {
     errs.push(new Promise(function (resolve, reject) {
         Telemetry.getEvolution(betaChannel.name, "" + nn, metric, {}, true, resolve);
     }));
